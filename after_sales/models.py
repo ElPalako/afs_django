@@ -57,21 +57,29 @@ class DeviceModel(models.Model):
 
 #Tabela zgłoszeń serwisowych
 class ServiceTicket(models.Model):
+    class TicketStatus(models.TextChoices):
+        OPEN = 'OPEN', 'Otwarte'
+        IN_PROGRESS = 'IN_PROGRESS', 'W realizacji'
+        WAITING_FOR_COMPONENTS = 'WAITING_FOR_COMPONENTS', 'Czekające na części'
+        READY_FOR_PICKUP = 'READY_FOR_PICKUP', 'Gotowe do odbioru'
+        SHIPPED = 'SHIPPED', 'Wysłane'
+        DELIVERED = 'DELIVERED', 'Dostarczone'
+        NOT_REPAIRABLE = 'NOT_REPAIRABLE', 'Nie do naprawy'
+        CLOSED = 'CLOSED', 'Zamknięte'
     ticket_number = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.RESTRICT, null=True, blank=True)
     serial_number = models.CharField(max_length=100)
     is_warranty = models.BooleanField(default=True)
     purchase_date = models.DateField(blank=True, null=True)
     repair_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     
-    customer = models.ForeignKey(
-        Customer, 
-        on_delete=models.CASCADE)
-    device_model = models.ForeignKey(
-        DeviceModel, 
-        on_delete=models.RESTRICT)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    device_model = models.ForeignKey(DeviceModel, on_delete=models.RESTRICT)
+    status = models.CharField(max_length=100, choices=TicketStatus.choices, default=TicketStatus.OPEN)
     
     def __str__(self):
-        return f"Ticket: {self.ticket_number} - {self.serial_number}"
+        return f"Ticket: {self.ticket_number} - {self.get_status_display()}"
     
 #Tabela komponentów
 class Component(models.Model):
