@@ -118,7 +118,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # PO ZALOGOWANIU: Przekieruj na stronę tworzenia ticketa (używamy nazwy url-a, czyli 'create-ticket')
-LOGIN_REDIRECT_URL = 'create-ticket' 
+LOGIN_REDIRECT_URL = 'dashboard' 
 
 # PO WYLOGOWANIU: Wyrzuć z powrotem na stronę logowania
 LOGOUT_REDIRECT_URL = 'login'

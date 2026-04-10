@@ -1,0 +1,160 @@
+{% extends 'after_sales/base.html' %} {% block title %}Dashboard - Service
+portal{% endblock %} {% block content %}
+<div class="mb-8">
+	<h1 class="text-3xl font-bold text-gray-900">
+		Witaj, {{ user.username }}! 👋
+	</h1>
+	<p class="text-gray-500 mt-1">Oto podsumowanie Twojego systemu na dzisiaj.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+	<div
+		class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col"
+	>
+		<h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
+			Twój Profil
+		</h3>
+		{% if profile and profile.company %}
+		<div class="flex items-center gap-4 mb-4">
+			<div
+				class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl"
+			>
+				{{ profile.company.name|make_list|first }}
+			</div>
+			<div>
+				<h4 class="text-lg font-bold text-gray-900">
+					{{ profile.company.name }}
+				</h4>
+				<span
+					class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+				>
+					{{ profile.get_role_display }}
+				</span>
+			</div>
+		</div>
+		<p class="text-sm text-gray-600">
+			<strong>NIP:</strong> {{ profile.company.tax_id|default:"Brak danych" }}
+		</p>
+		{% else %}
+		<p class="text-sm text-gray-500 italic">
+			Nie przypisano profilu ani firmy. Uzupełnij w panelu Admina.
+		</p>
+		{% endif %}
+	</div>
+
+	<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+		<h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
+			Zgłoszenia Serwisowe
+		</h3>
+		<div class="text-4xl font-extrabold text-gray-900 mb-2">
+			{{ total_tickets }}
+		</div>
+		<p class="text-sm text-gray-500 mb-4">Wszystkich zarejestrowanych napraw</p>
+
+		<div class="space-y-2">
+			<div class="flex justify-between items-center text-sm">
+				<span class="text-gray-600 flex items-center gap-2"
+					><span class="w-2 h-2 rounded-full bg-green-500"></span>
+					Gwarancyjne</span
+				>
+				<span class="font-bold text-gray-900">{{ warranty_tickets }}</span>
+			</div>
+			<div class="flex justify-between items-center text-sm">
+				<span class="text-gray-600 flex items-center gap-2"
+					><span class="w-2 h-2 rounded-full bg-orange-500"></span>
+					Odpłatne</span
+				>
+				<span class="font-bold text-gray-900">{{ paid_tickets }}</span>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 bg-gray-50/50"
+	>
+		<div class="flex justify-between items-start mb-4">
+			<h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">
+				Zamówienia B2B
+			</h3>
+			<span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded"
+				>Wkrótce</span
+			>
+		</div>
+		<p class="text-sm text-gray-500 mb-4">
+			Moduł zamawiania części u producentów zostanie wdrożony w kolejnej fazie.
+		</p>
+		<button
+			disabled
+			class="w-full bg-gray-200 text-gray-400 font-bold py-2 px-4 rounded-lg cursor-not-allowed"
+		>
+			Przejdź do zamówień
+		</button>
+	</div>
+
+	<div
+		class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 lg:col-span-2"
+	>
+		<h3
+			class="text-sm font-bold text-red-500 uppercase tracking-wider mb-4 flex items-center gap-2"
+		>
+			⚠️ Niski stan magazynowy
+		</h3>
+
+		{% if low_stock %}
+		<div class="overflow-x-auto">
+			<table class="min-w-full text-left text-sm">
+				<thead>
+					<tr class="border-b border-gray-200 text-gray-500">
+						<th class="pb-2 font-medium">Numer części</th>
+						<th class="pb-2 font-medium">Nazwa komponentu</th>
+						<th class="pb-2 font-medium text-right">Stan obecny</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-100">
+					{% for item in low_stock %}
+					<tr>
+						<td class="py-3 text-gray-900 font-medium">
+							{{ item.component.part_number }}
+						</td>
+						<td class="py-3 text-gray-600">{{ item.component.name }}</td>
+						<td class="py-3 text-right">
+							<span
+								class="bg-red-100 text-red-700 px-2.5 py-0.5 rounded-full font-bold"
+							>
+								{{ item.quantity }} szt.
+							</span>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		{% else %}
+		<p class="text-sm text-gray-500 italic">
+			Wszystkie stany magazynowe w normie! Śpij spokojnie. ☕
+		</p>
+		{% endif %}
+	</div>
+
+	<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+		<h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
+			Na skróty
+		</h3>
+		<div class="space-y-3">
+			<a
+				href="{% url 'create-ticket' %}"
+				class="block w-full text-center bg-primary hover:bg-primaryHover text-white font-bold py-2 px-4 rounded-lg transition-colors"
+			>
+				+ Nowe Zgłoszenie
+			</a>
+			<a
+				href="/admin/"
+				target="_blank"
+				class="block w-full text-center bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+			>
+				⚙️ Panel Administratora
+			</a>
+		</div>
+	</div>
+</div>
+{% endblock content %}
