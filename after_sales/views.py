@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponse
+from django.contrib.auth.decorators import login_required #Importujemy kłódkę
 from .forms import ServiceTicketForm
 
+@login_required(login_url='login') #Ta dekoracja sprawia, że tylko zalogowani użytkownicy mogą zobaczyć ten widok. Jeśli nie są zalogowani, zostaną przekierowani do strony logowania.
 def create_ticket_view(request):
     # Jeśli użytkownik kliknął "Zapisz" (wysłał dane formularza)
     if request.method == 'POST':

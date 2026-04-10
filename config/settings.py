@@ -116,3 +116,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# PO ZALOGOWANIU: Przekieruj na stronę tworzenia ticketa (używamy nazwy url-a, czyli 'create-ticket')
+LOGIN_REDIRECT_URL = 'create-ticket' 
+
+# PO WYLOGOWANIU: Wyrzuć z powrotem na stronę logowania
+LOGOUT_REDIRECT_URL = 'login'
