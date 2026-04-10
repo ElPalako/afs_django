@@ -3,28 +3,32 @@ from django.contrib.auth.decorators import login_required #Importujemy kłódkę
 from .models import ServiceTicket, Stock
 from .forms import ServiceTicketForm
 
-@login_required(login_url='login') #Ta dekoracja sprawia, że tylko zalogowani użytkownicy mogą zobaczyć ten widok. Jeśli nie są zalogowani, zostaną przekierowani do strony logowania.
+@login_required(login_url='login')
 def dashboard_view(request):
-    # Pobieramy profil użytkownika (jeśli istnieje)
     user_profile = getattr(request.user, 'profile', None)
     
-    # Statystyki RMA
+    # 1. Zliczamy wszystkie zgłoszenia
     total_tickets = ServiceTicket.objects.count()
-    warranty_tickets = ServiceTicket.objects.filter(is_warranty=True).count()
-    paid_tickets = total_tickets - warranty_tickets
     
-    # Alerty magazynowe (Szukamy części, których jest mniej niż 10 sztuk)
-    low_stock_alerts = Stock.objects.filter(quantity__lt=10).select_related('component')[:10]
+    # 2. Zliczamy zgłoszenia po TWOICH statusach
+    tickets_open = ServiceTicket.objects.filter(status='OPEN').count()
+    tickets_in_progress = ServiceTicket.objects.filter(status='IN_PROGRESS').count()
+    tickets_waiting = ServiceTicket.objects.filter(status='WAITING_FOR_COMPONENTS').count()
+    tickets_ready = ServiceTicket.objects.filter(status='READY_FOR_PICKUP').count()
     
-    # Pakujemy wszystko w jedną "paczkę" (słownik) i wysyłamy do szablonu
+    # 3. Alerty Magazynowe
+    low_stock = Stock.objects.filter(quantity__lt=5).select_related('component')[:5]
+
     context = {
         'profile': user_profile,
         'total_tickets': total_tickets,
-        'warranty_tickets': warranty_tickets,
-        'paid_tickets': paid_tickets,
-        'low_stock_alerts': low_stock_alerts
+        'tickets_open': tickets_open,
+        'tickets_in_progress': tickets_in_progress,
+        'tickets_waiting': tickets_waiting,
+        'tickets_ready': tickets_ready,
+        'low_stock': low_stock,
     }
-
+    
     return render(request, 'after_sales/dashboard.html', context)
 
 
@@ -51,3 +55,10 @@ def create_ticket_view(request):
     # Wysyłamy pusty formularz do szablonu HTML    
     return render(request, 'after_sales/create_ticket.html', {'form': form})
 
+@login_required(login_url='login')
+def ticket_list_view(request):
+    # Pobieramy wszystkie tickety. Znak minus '-' przed created_at oznacza "Malejąco" (od najnowszych)
+    # .select_related() optymalizuje zapytania do bazy, żeby pobrać od razu dane klienta i urządzenia
+    tickets = ServiceTicket.objects.all().order_by('-created_at').select_related('customer', 'device_model')
+    
+    return render(request, 'after_sales/ticket_list.html', {'tickets': tickets})
