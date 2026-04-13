@@ -2,11 +2,12 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required #Importujemy kłódkę
 from .models import ServiceTicket, Stock
 from .forms import ServiceTicketForm
+from django.db.models import Q
 
 @login_required(login_url='login')
 def dashboard_view(request):
     user_profile = getattr(request.user, 'profile', None)
-    
+
     # 1. Zliczamy wszystkie zgłoszenia
     total_tickets = ServiceTicket.objects.count()
     
@@ -57,8 +58,37 @@ def create_ticket_view(request):
 
 @login_required(login_url='login')
 def ticket_list_view(request):
-    # Pobieramy wszystkie tickety. Znak minus '-' przed created_at oznacza "Malejąco" (od najnowszych)
-    # .select_related() optymalizuje zapytania do bazy, żeby pobrać od razu dane klienta i urządzenia
-    tickets = ServiceTicket.objects.all().order_by('-created_at').select_related('customer', 'device_model')
+    # 1. Pobieramy to, co użytkownik wpisał w pasku i w co kliknął
+    search_query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', '-created_at') # Domyślnie od najnowszych
     
-    return render(request, 'after_sales/ticket_list.html', {'tickets': tickets})
+    # Podstawowe zapytanie (wszystkie tickety)
+    tickets = ServiceTicket.objects.all().select_related('customer', 'device_model')
+    
+    # 2. Filtrujemy po wyszukiwaniu
+    if search_query:
+        # icontains = szukaj ignorując wielkość liter (case-insensitive)
+        tickets = tickets.filter(
+            Q(ticket_number__icontains=search_query) |
+            Q(customer__name__icontains=search_query) |
+            Q(device_model__name__icontains=search_query)
+        )
+    
+    # 3. SORTOWANIE (Sprawdzamy, czy przesłany parametr jest bezpieczny)
+    allowed_sorts = [
+        'ticket_number', '-ticket_number', 
+        'created_at', '-created_at', 
+        'customer__name', '-customer__name'
+    ]
+    if sort_by in allowed_sorts:
+        tickets = tickets.order_by(sort_by)
+    else:
+        tickets = tickets.order_by('-created_at')
+        
+    # Pakujemy wszystko do pudełka i wysyłamy do HTML
+    context = {
+        'tickets': tickets,
+        'search_query': search_query,
+        'current_sort': sort_by,
+    }
+    return render(request, 'after_sales/ticket_list.html', context)
