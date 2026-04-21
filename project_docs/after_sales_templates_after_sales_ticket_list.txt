@@ -1,0 +1,142 @@
+{% extends 'after_sales/base.html' %} {% block title %}Lista RMA - Service
+portal{% endblock %} {% block content %}
+<div class="mb-6 flex justify-between items-end">
+	<div>
+		<h1 class="text-2xl font-bold text-gray-900">Zgłoszenia Serwisowe (RMA)</h1>
+		<p class="text-sm text-gray-500 mt-1">
+			Zarządzaj wszystkimi naprawami w systemie.
+		</p>
+	</div>
+	<a
+		href="{% url 'create-ticket' %}"
+		class="bg-primary hover:bg-primaryHover text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors"
+	>
+		+ Nowe Zgłoszenie
+	</a>
+</div>
+
+<div id="ticket-table-container">
+	<div class="mb-4 flex gap-4 items-center">
+		<div class="relative w-full max-w-md">
+			<input
+				type="text"
+				name="q"
+				value="{{ search_query }}"
+				placeholder="Szukaj RMA, klienta lub numeru seryjnego..."
+				class="w-full !pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+				hx-get="{% url 'ticket-list' %}"
+				hx-trigger="keyup changed delay:500ms"
+				hx-target="#ticket-table-container"
+				hx-select="#ticket-table-container"
+				hx-include="[name='sort']"
+			/>
+
+			<svg
+				class="w-5 h-5 text-gray-400 absolute left-3 top-2.5"
+				fill="none"
+				stroke="currentColor"
+				viewBox="0 0 24 24"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+				></path>
+			</svg>
+		</div>
+
+		<input type="hidden" name="sort" value="{{ current_sort }}" />
+	</div>
+
+	<div
+		class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden"
+	>
+		<div class="overflow-x-auto">
+			<table class="w-full text-left text-sm whitespace-nowrap">
+				<thead
+					class="bg-gray-50 border-b border-gray-200 text-gray-500 uppercase tracking-wider text-xs"
+				>
+					<tr>
+						<th
+							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
+							hx-get="{% url 'ticket-list' %}?sort={% if current_sort == 'ticket_number' %}-ticket_number{% else %}ticket_number{% endif %}"
+							hx-target="#ticket-table-container"
+							hx-select="#ticket-table-container"
+							hx-include="[name='q']"
+						>
+							Numer RMA {% if current_sort == 'ticket_number' %} ↑ {% elif
+							current_sort == '-ticket_number' %} ↓ {% endif %}
+						</th>
+
+						<th
+							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
+							hx-get="{% url 'ticket-list' %}?sort={% if current_sort == '-created_at' %}created_at{% else %}-created_at{% endif %}"
+							hx-target="#ticket-table-container"
+							hx-select="#ticket-table-container"
+							hx-include="[name='q']"
+						>
+							Data zgłoszenia {% if current_sort == 'created_at' %}↑{% elif
+							current_sort == '-created_at' %}↓{% endif %}
+						</th>
+
+						<th
+							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
+							hx-get="{% url 'ticket-list' %}?sort={% if current_sort == 'customer__name' %}-customer__name{% else %}customer__name{% endif %}"
+							hx-target="#ticket-table-container"
+							hx-select="#ticket-table-container"
+							hx-include="[name='q']"
+						>
+							Klient {% if current_sort == 'customer__name' %}↑{% elif
+							current_sort == '-customer__name' %}↓{% endif %}
+						</th>
+
+						<th class="px-6 py-4 font-semibold">Urządzenie</th>
+						<th class="px-6 py-4 font-semibold">Status</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-200">
+					{% for ticket in tickets %}
+					<tr
+						onclick="window.location = '#'"
+						class="hover:bg-gray-50 cursor-pointer transition-colors group"
+					>
+						<td
+							class="px-6 py-4 font-bold text-gray-900 group-hover:text-primary"
+						>
+							{{ ticket.ticket_number }}
+						</td>
+						<td class="px-6 py-4 text-gray-500">
+							{{ ticket.created_at|date:"d.m.Y, H:i" }}
+						</td>
+						<td class="px-6 py-4">
+							<div class="font-medium text-gray-900">
+								{{ ticket.customer.name }}
+							</div>
+							<div class="text-xs text-gray-400">
+								{{ ticket.customer.email }}
+							</div>
+						</td>
+						<td class="px-6 py-4 text-gray-600">
+							{{ ticket.device_model.name}}<br />
+							<span class="text-xs text-gray-400"
+								>SN: {{ ticket.serial_number }}</span
+							>
+						</td>
+						<td class="px-6 py-4 font-medium text-gray-700">
+							{{ ticket.get_status_display }}
+						</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td colspan="5" class="px-6 py-10 text-center text-gray-500">
+							Brak zgłoszeń pasujących do Twoich kryteriów.
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock content %}
