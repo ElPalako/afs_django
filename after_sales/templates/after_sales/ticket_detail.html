@@ -1,0 +1,80 @@
+{% extends 'after_sales/base.html' %}
+{% block title %}Zgłoszenie {{ ticket.ticket_number }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <div id="status-container" class="flex flex-col items-start">
+        <div class="flex items-center gap-3">
+            <h1 class="text-3xl font-extrabold text-gray-900">{{ ticket.ticket_number }}</h1>
+            
+            <select name="status" 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary p-2"
+                    hx-post="{% url 'update-status' ticket.id %}" 
+                    hx-target="#status-container"
+                    hx-swap="innerHTML"
+                    hx-trigger="change"
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                
+                {% for value, label in ticket.TicketStatus.choices %}
+                    <option value="{{ value }}" {% if ticket.status == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <p class="text-gray-500 text-sm mt-2">Zgłoszono: {{ ticket.created_at|date:"d.m.Y, H:i" }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-sm font-bold text-gray-400 uppercase mb-4">Dane Klienta</h3>
+            <p class="font-bold text-gray-900">{{ ticket.customer.name }}</p>
+            <p class="text-sm text-gray-600 mt-1">{{ ticket.customer.email }}</p>
+            <p class="text-sm text-gray-600 mt-1">{{ ticket.customer.phone|default:"Brak telefonu" }}</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-sm font-bold text-gray-400 uppercase mb-4">Informacje o sprzęcie</h3>
+            <p class="font-bold text-gray-900">{{ ticket.device_model.manufacturer }} {{ ticket.device_model.name }}</p>
+            <p class="text-sm text-gray-600 mt-1">S/N: <span class="font-mono bg-gray-100 px-1 rounded">{{ ticket.serial_number }}</span></p>
+            <div class="mt-3">
+                {% if ticket.is_warranty %}
+                    <span class="text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded">Naprawa Gwarancyjna</span>
+                {% else %}
+                    <span class="text-xs font-bold bg-gray-100 text-gray-800 px-2 py-1 rounded">Odpłatna</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-sm font-bold text-gray-400 uppercase">Zużyte Części</h3>
+            <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded text-sm font-medium opacity-50 cursor-not-allowed">
+                + Dodaj część (Wkrótce)
+            </button>
+        </div>
+        
+        {% if parts_used %}
+            <ul class="divide-y divide-gray-100">
+                {% for part in parts_used %}
+                    <li class="py-3 flex justify-between items-center">
+                        <div>
+                            <span class="font-medium text-gray-900">{{ part.component.name }}</span>
+                            <span class="text-xs text-gray-500 ml-2">({{ part.component.part_number }})</span>
+                        </div>
+                        <div class="font-bold text-gray-700">
+                            {{ part.quantity_used }} szt.
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-sm text-gray-500 italic text-center py-4">Jeszcze nie zaksięgowano żadnych części z magazynu.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock content %}

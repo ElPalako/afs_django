@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required #Importujemy kłódkę
 from .models import ServiceTicket, Stock
 from .forms import ServiceTicketForm
@@ -92,3 +92,39 @@ def ticket_list_view(request):
         'current_sort': sort_by,
     }
     return render(request, 'after_sales/ticket_list.html', context)
+
+@login_required(login_url='login')
+def ticket_detail_view(request, ticket_id):
+    # Szukamy zgłoszenia, jeśli go nie ma - wyrzucamy błąd 404 (nie znaleziono)
+    ticket = get_object_or_404(ServiceTicket, id=ticket_id)
+    
+    # Pobieramy również listę części przypisanych do tego zgłoszenia
+    parts_used = ticket.ticketcomponent_set.all().select_related('component')
+    
+    context = {
+        'ticket': ticket,
+        'parts_used': parts_used,
+        # W przyszłości prześlemy tu też formularz dodawania częsci
+    }
+    
+    return render(request, 'after_sales/ticket_detail.html', context)
+
+@login_required(login_url='login')
+def update_ticket_status(request, ticket_id):
+    if request.method == 'POST':
+        ticket = get_object_or_404(ServiceTicket, id=ticket_id)
+        # Pobieramy nową wartość statusu przesłaną przez HTMX
+        new_staus = request.POST.get('status')
+        
+        # Aktualizujemy model
+        ticket.status = new_staus
+        ticket.save()
+        
+        # Zwracamy TYLKO fragment HTML z nowym statusem
+        # Używamy get_status_display() żęby pokazać ładną nazwę
+        return HttpResponse(f"""
+            <span class="px-3 py-1 text-sm font-bold rounded-full bg-blue-100 text-blue-800 transition-all duration-500">
+                {ticket.get_status_display()}
+            </span>
+            <div class="text-xs text-green-600 mt-1 animate-bounce">Status zaktualizowany!</div>
+        """)
