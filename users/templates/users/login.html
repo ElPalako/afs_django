@@ -35,7 +35,7 @@
     </form>
 
     <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col space-y-2 text-center text-sm">
-        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Zapomniałeś hasła?</a>
+        <a href="{% url 'password_reset' %}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Zapomniałeś hasła?</a>
         <span class="text-gray-500">
             Nie masz konta? <a href="{% url 'register' %}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Zarejestruj się</a>
         </span>

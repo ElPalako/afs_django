@@ -132,3 +132,5 @@ LOGIN_REDIRECT_URL = 'dashboard'
 
 # PO WYLOGOWANIU: Wyrzuć z powrotem na stronę logowania
 LOGOUT_REDIRECT_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
