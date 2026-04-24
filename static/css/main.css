@@ -4,8 +4,54 @@ body {
     scroll-behavior: smooth; 
 }
 
-/* Własna klasa, jak w W3Schools, jeśli Tailwind to za mało */
-.moj-super-przycisk {
-    background-color: #ff0000;
+/* Standardowe pole tekstowe i listy rozwijane */
+.input-standard {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: #f9fafb; /* Bardzo jasny szary */
+    border: 1px solid #d1d5db; /* Szara ramka */
+    border-radius: 0.5rem;     /* Zaokrąglone rogi */
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Reakcja na kliknięcie (niebieska poświata) */
+.input-standard:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Główny przycisk akcji (np. Zapisz, Dodaj) */
+.btn-submit {
+    background-color: #2563eb;
     color: white;
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%; /* Domyślnie na całą szerokość, można zmienić */
+}
+
+.btn-submit:hover {
+    background-color: #1d4ed8;
+}
+
+/* Przycisk anulowania / powrotu */
+.btn-cancel {
+    background-color: white;
+    color: #4b5563;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.btn-cancel:hover {
+    background-color: #f3f4f6;
+    color: #111827;
 }

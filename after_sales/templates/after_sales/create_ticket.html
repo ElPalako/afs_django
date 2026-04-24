@@ -29,12 +29,8 @@
 		</div>
 		{% endfor %}
 
-		<button
-			type="submit"
-			class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 px-4 rounded-lg shadow transition-colors mt-4"
-		>
-			Zapisz Zgłoszenie
-		</button>
+		<button type="submit" class="btn-submit">Zapisz Zgłoszenie</button>
+		<a href="{% url 'ticket-list' %}" class="btn-cancel text-center block">Anuluj</a>
 	</form>
 </div>
 {% endblock content %}
