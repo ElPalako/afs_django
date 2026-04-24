@@ -1,6 +1,57 @@
-<nav class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
-    <div class="flex justify-between items-center max-w-7xl mx-auto">
-        <a href="/" class="font-bold text-xl text-primary">AfterSales Pro</a>
-        <span class="text-sm text-gray-500">Zalogowany jako: {{ request.user.username }}</span>
+<nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            
+            <div class="flex">
+                <div class="flex-shrink-0 flex items-center mr-8">
+                    <a href="/" class="text-2xl font-extrabold text-gray-900 tracking-tight">
+                        AfterSales <span class="text-blue-600">Pro</span>
+                    </a>
+                </div>
+                
+                <div class="hidden sm:flex sm:space-x-8">
+                    
+                    <div class="relative group flex items-center">
+                        <button class="text-gray-500 group-hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-600 text-sm font-medium transition-all duration-200 h-full">
+                            RMA
+                            <svg class="ml-1.5 h-4 w-4 transition-transform duration-200 group-hover:-rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        
+                        <div class="absolute left-0 top-full w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top group-hover:translate-y-0 translate-y-2">
+                            <div class="py-2">
+                                <a href="{% url 'ticket-list' %}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Zgłoszenia</a>
+                                <a href="{% url 'create-ticket' %}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Utwórz nowe zgłoszenie</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#" class="text-gray-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-600 text-sm font-medium transition-colors h-full">
+                        Ustawienia
+                    </a>
+
+                    {% if request.user.is_superuser %}
+                    <a href="/admin/" target="_blank" class="text-red-500 hover:text-red-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-red-500 text-sm font-bold transition-colors h-full">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Admin
+                    </a>
+                    {% endif %}
+                    
+                </div>
+            </div>
+
+            <div class="hidden sm:flex sm:items-center space-x-4">
+                <span class="text-sm text-gray-500">
+                    Cześć, <span class="font-bold text-gray-900">{{ request.user.username }}</span>
+                </span>
+                
+                <form method="POST" action="{% url 'logout' %}" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors shadow-sm">
+                        Wyloguj się
+                    </button>
+                </form>
+            </div>
+            
+        </div>
     </div>
 </nav>
