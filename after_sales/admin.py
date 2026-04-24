@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, BusinessPartner, DeviceModel, ServiceTicket, Component, Stock, TicketComponent, UserProfile
+from .models import Customer, BusinessPartner, DeviceModel, ServiceTicket, Component, Stock, TicketComponent
 
 # Rejestrujemy wszystkie nasze modele, żeby były widoczne w panelu admina
 admin.site.register(Customer)
@@ -7,7 +7,6 @@ admin.site.register(BusinessPartner)
 admin.site.register(DeviceModel)
 admin.site.register(Component)
 admin.site.register(TicketComponent)
-admin.site.register(UserProfile)
 
 # Rejestracja zaawansowana - widok tabeli@admin.register(Stock)
 @admin.register(Stock)

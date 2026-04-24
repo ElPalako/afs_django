@@ -1,8 +1,10 @@
 from django.shortcuts import render, HttpResponse, get_object_or_404
-from django.contrib.auth.decorators import login_required #Importujemy kłódkę
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import ServiceTicket, Stock
+from users.models import UserProfile
 from .forms import ServiceTicketForm
 from django.db.models import Q
+from .permissions import can_create_update_ticket
 
 @login_required(login_url='login')
 def dashboard_view(request):
@@ -33,7 +35,8 @@ def dashboard_view(request):
     return render(request, 'after_sales/dashboard.html', context)
 
 
-@login_required(login_url='login') #Ta dekoracja sprawia, że tylko zalogowani użytkownicy mogą zobaczyć ten widok. Jeśli nie są zalogowani, zostaną przekierowani do strony logowania.
+@login_required(login_url='login')
+@user_passes_test(can_create_update_ticket, login_url='/')
 def create_ticket_view(request):
     # Jeśli użytkownik kliknął "Zapisz" (wysłał dane formularza)
     if request.method == 'POST':

@@ -1,0 +1,21 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Oczekiwanie na aktywację{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md bg-white p-10 rounded-2xl shadow-lg border border-gray-100 text-center">
+    <div class="mb-6 inline-flex items-center justify-center w-16 h-16 bg-yellow-50 rounded-full">
+        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+    </div>
+    
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">Konto utworzone!</h1>
+    <p class="text-gray-600 mb-8 leading-relaxed">
+        Twoje zgłoszenie zostało wysłane do administratora. <br>
+        <strong>Otrzymasz wiadomość e-mail</strong>, gdy tylko Twoje konto zostanie aktywowane.
+    </p>
+
+    <a href="{% url 'login' %}" class="text-blue-600 hover:underline font-medium">Wróć do strony logowania</a>
+</div>
+{% endblock %}

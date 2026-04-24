@@ -1,0 +1,11 @@
+/* static/css/main.css */
+body {
+    /* Delikatny efekt płynnego przewijania dla całej strony */
+    scroll-behavior: smooth; 
+}
+
+/* Własna klasa, jak w W3Schools, jeśli Tailwind to za mało */
+.moj-super-przycisk {
+    background-color: #ff0000;
+    color: white;
+}

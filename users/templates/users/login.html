@@ -1,0 +1,44 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Zaloguj się - AfterSales{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-extrabold text-gray-900">AfterSales <span class="text-blue-600">Pro</span></h1>
+        <p class="text-gray-500 mt-2 text-sm">Zaloguj się do swojego konta</p>
+    </div>
+
+    <form method="POST" class="space-y-5">
+        {% csrf_token %}
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nazwa użytkownika</label>
+            <input type="text" name="username" required 
+                   class="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Hasło</label>
+            <input type="password" name="password" required 
+                   class="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+        </div>
+
+        {% if form.errors %}
+            <p class="text-red-500 text-sm font-medium text-center">Nieprawidłowy login lub hasło.</p>
+        {% endif %}
+
+        <button type="submit" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors shadow-sm mt-4">
+            Zaloguj się
+        </button>
+    </form>
+
+    <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col space-y-2 text-center text-sm">
+        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Zapomniałeś hasła?</a>
+        <span class="text-gray-500">
+            Nie masz konta? <a href="{% url 'register' %}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Zarejestruj się</a>
+        </span>
+    </div>
+</div>
+{% endblock %}

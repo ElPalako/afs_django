@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 """
 Django settings for config project.
 
@@ -37,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
     'after_sales',
 ]
 
@@ -55,10 +59,12 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # Wskazanie globalnego folderu z templatkami
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -116,6 +122,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# WSKAZUJEMY GLOBALNY FOLDER STATIC:
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # PO ZALOGOWANIU: Przekieruj na stronę tworzenia ticketa (używamy nazwy url-a, czyli 'create-ticket')
 LOGIN_REDIRECT_URL = 'dashboard' 
