@@ -15,6 +15,17 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
+/* Standardowe pole opisowe */
+.textarea-standard {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: #f9fafb; /* Bardzo jasny szary */
+    border: 1px solid #d1d5db; /* Szara ramka */
+    border-radius: 0.5rem;     /* Zaokrąglone rogi */
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
 /* Reakcja na kliknięcie (niebieska poświata) */
 .input-standard:focus {
     border-color: #3b82f6;
