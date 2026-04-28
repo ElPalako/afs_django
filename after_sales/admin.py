@@ -1,10 +1,9 @@
 from django.contrib import admin
-from .models import Customer, BusinessPartner, DeviceModel, ServiceTicket, Component, Stock, TicketComponent
+from .models import Customer, BusinessPartner, DeviceModel, ServiceTicket, Component, Stock, TicketComponent, ComponentCategory
 
 # Rejestrujemy wszystkie nasze modele, żeby były widoczne w panelu admina
 admin.site.register(Customer)
 admin.site.register(BusinessPartner)
-admin.site.register(Component)
 admin.site.register(TicketComponent)
 
 # Rejestracja zaawansowana - widok tabeli@admin.register(Stock)
@@ -28,3 +27,15 @@ class DeviceModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'manufacturer', 'device_category')
     list_filter = ('name', 'manufacturer', 'device_category')
     search_fields = ('name', 'manufacturer', 'device_category')
+
+@admin.register(Component)    
+class ComponentAdmin(admin.ModelAdmin):
+    list_display = ('part_number', 'name', 'description', 'price', "moq", 'manufacturer', 'category')
+    list_filter = ('part_number', 'name', 'description', 'price', "moq", 'manufacturer', 'category')
+    search_fields = ('part_number', 'name', 'description', 'price', "moq", 'manufacturer', 'category')
+    
+@admin.register(ComponentCategory)    
+class ComponentCategoryAdmin(admin.ModelAdmin):
+    list_display = ('category_name', 'description', 'sn_need')
+    list_filter = ('category_name', 'description', 'sn_need')
+    search_fields = ('category_name', 'description', 'sn_need')

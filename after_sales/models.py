@@ -74,7 +74,14 @@ class ServiceTicket(models.Model):
     def __str__(self):
         return f"Ticket: {self.ticket_number} - {self.get_status_display()}"
     
-#Tabela komponentów
+class ComponentCategory(models.Model):
+    category_name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
+    sn_need = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return (self.category_name)
+    
 class Component(models.Model):
     part_number = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=150)
@@ -88,10 +95,14 @@ class Component(models.Model):
         blank = True,
         null = True
         )
+    category = models.ForeignKey(
+        ComponentCategory,
+        on_delete=models.RESTRICT,
+        null=True)
     
     def __str__(self):
         return f"Component: {self.part_number} for {self.name}"
-
+    
 #Tabela ze stockiem magazynowym
 class Stock(models.Model):
     component = models.ForeignKey(
