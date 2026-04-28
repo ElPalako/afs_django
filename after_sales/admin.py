@@ -18,9 +18,9 @@ class StockAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceTicket)
 class ServiceTicketAdmin(admin.ModelAdmin):
-    list_display = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at')
-    list_filter = ('is_warranty', 'device_model')
-    search_fields = ('ticket_number', 'serial_number', 'customer__name')
+    list_display = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at', 'business_partner', 'description')
+    list_filter = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at', 'business_partner', 'description')
+    search_fields = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at', 'business_partner', 'description')
     
 @admin.register(DeviceModel)
 class DeviceModelAdmin(admin.ModelAdmin):

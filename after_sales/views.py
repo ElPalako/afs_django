@@ -42,7 +42,18 @@ def create_ticket_view(request):
     if request.method == 'POST':
         form = ServiceTicketForm(request.POST)
         if form.is_valid(): # Django sam sprawdza, czy wpisano maile, daty itp.
-            form.save()     # Zapisujemy do bazy!
+            
+            # 1. PAUZA: Tworzymy obiekt zgłoszenia z formularza, ale NIE zapisujemy go jeszcze w bazie
+            ticket = form.save(commit=False)
+            # 2. Przypisujemy Twórcę (zalogowany user)
+            ticket.created_by = request.user
+            # 3. Przypisujemy firmę (z modelu UserProfile, pole 'company')
+            # (Używamy hasattr jako tarczy - w razie gdyby np. superuser nie miał profilu)
+            if hasattr(request.user, 'profile'):
+                ticket.business_partner = request.user.profile.company
+                
+            # 3. ZAPIS: Teraz kompletne zgłoszenie z przypisaną firmą leci na serwer!
+            ticket.save()
             # MAGIA HTMX: Sprawdzamy, czy to zapytanie wysłane w tle
             if request.headers.get('HX-Request'):
                 # Zwracamy czysty HTML z informacją o sukcesie. 

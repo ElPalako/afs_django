@@ -15,6 +15,7 @@ class Customer(models.Model):
 #Tabela partnerów binzesowych
 class BusinessPartner(models.Model):
     class PartnerType(models.TextChoices):
+        SCEP = 'SCEP', 'Sharp Consumer Electronics Poland sp. z o.o.'
         MANUFACTURER = 'MANUFACTURER', 'Producent'
         DISTRIBUTOR = 'DISTRIBUTOR', 'Dystrybutor'
         SERVICE_CENTER = 'SERVICE_CENTER', 'Serwis Zewnętrzny'
@@ -54,6 +55,7 @@ class ServiceTicket(models.Model):
         OPEN = 'OPEN', 'Otwarte'
         IN_PROGRESS = 'IN_PROGRESS', 'W realizacji'
         WAITING_FOR_COMPONENTS = 'WAITING_FOR_COMPONENTS', 'Czekające na części'
+        DISSASEMBLY = "DISSASEMBLY", "Oczekuja na demontaż"
         READY_FOR_PICKUP = 'READY_FOR_PICKUP', 'Gotowe do odbioru'
         SHIPPED = 'SHIPPED', 'Wysłane'
         DELIVERED = 'DELIVERED', 'Dostarczone'
@@ -66,10 +68,29 @@ class ServiceTicket(models.Model):
     is_warranty = models.BooleanField(default=True)
     purchase_date = models.DateField(blank=True, null=True)
     repair_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.RESTRICT)
     device_model = models.ForeignKey(DeviceModel, on_delete=models.RESTRICT)
     status = models.CharField(max_length=100, choices=TicketStatus.choices, default=TicketStatus.OPEN)
+    business_partner = models.ForeignKey(
+        BusinessPartner,
+        on_delete=models.RESTRICT,
+        null=True,        
+    )
+    description = models.TextField(blank=True, null=True)
+    
+    @property
+    def client_status(self):
+        # Słownik (mapa), który tłumaczy nasze statusy na statusy dla klienta
+        status_map = {
+            self.TicketStatus.OPEN: 'Przyjęto do serwisu',
+            # Kilka różnych statusów wewnętrznych daje ten sam komunikat dla klienta
+            self.TicketStatus.WAITING_FOR_COMPONENTS: 'W realizacji',
+            self.TicketStatus.DISASSEMBLY: 'W realizacji',
+        }
+        
+        # Pobieramy przetłumaczony status. 
+        # Jeśli jakiegoś zapomnisz dodać do słownika, domyślnie zwróci 'Przetwarzane'
+        return status_map.get(self.status, 'Przetwarzane')
     
     def __str__(self):
         return f"Ticket: {self.ticket_number} - {self.get_status_display()}"
@@ -119,7 +140,7 @@ class Stock(models.Model):
 class TicketComponent(models.Model):
     ticket_number = models.ForeignKey(
         ServiceTicket, 
-        on_delete=models.CASCADE)
+        on_delete=models.RESTRICT)
     component = models.ForeignKey(
         Component, 
         on_delete=models.RESTRICT)
