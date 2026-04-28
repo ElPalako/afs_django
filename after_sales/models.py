@@ -29,11 +29,21 @@ class BusinessPartner(models.Model):
 
 #Tabela modeli urządzeń
 class DeviceModel(models.Model):
+    
+    class DeviceCategory(models.TextChoices):
+        TV = 'TV', 'Telewizor'
+        AUD = 'Audio', 'Audio'
+        SAS = 'SAS', 'SAS/SDA'
+        EBIKE = 'Ebike', 'Rower elektryczny' 
+        ESC = 'Escooter', 'Hulajnoga elektryczna'
+    
     name = models.CharField(max_length=150)
     manufacturer = models.ForeignKey(
         BusinessPartner, 
         on_delete=models.RESTRICT, 
         limit_choices_to={'partner_type': 'MANUFACTURER'})
+    device_category = models.CharField(max_length=200, choices=DeviceCategory.choices, null=True)
+
 
     def __str__(self):
         return f"DeviceModel: {self.name} {self.manufacturer.name}"

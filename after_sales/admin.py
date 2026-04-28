@@ -4,7 +4,6 @@ from .models import Customer, BusinessPartner, DeviceModel, ServiceTicket, Compo
 # Rejestrujemy wszystkie nasze modele, żeby były widoczne w panelu admina
 admin.site.register(Customer)
 admin.site.register(BusinessPartner)
-admin.site.register(DeviceModel)
 admin.site.register(Component)
 admin.site.register(TicketComponent)
 
@@ -23,3 +22,9 @@ class ServiceTicketAdmin(admin.ModelAdmin):
     list_display = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at')
     list_filter = ('is_warranty', 'device_model')
     search_fields = ('ticket_number', 'serial_number', 'customer__name')
+    
+@admin.register(DeviceModel)
+class DeviceModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'manufacturer', 'device_category')
+    list_filter = ('name', 'manufacturer', 'device_category')
+    search_fields = ('name', 'manufacturer', 'device_category')
