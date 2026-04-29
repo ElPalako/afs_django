@@ -7,10 +7,12 @@ admin.site.register(OrdersSerialNumber)
 
 # Rejestracja zaawansowana - widok tabeli@admin.register(Stock)
 @admin.register(Orders)
-class StockAdmin(admin.ModelAdmin):
+class OrdersAdmin(admin.ModelAdmin):
+    # Pomocnicza zmienna (zwykle z podłogą na początku, żeby pokazać, że jest "prywatna")
+    _my_fields = ('order_number', 'qty', 'material')
     # Kolumny, które chcemy widzieć w tabeli
-    list_display = ('order_number', 'qty', 'material')
+    list_display = _my_fields
     # Filtry po prawej stronie ekranu
-    list_filter = ('order_number', 'qty', 'material')
+    list_filter = _my_fields
     # Pasek wyszukiwania!
-    search_fields = ('order_number', 'qty', 'material')
+    search_fields = _my_fields

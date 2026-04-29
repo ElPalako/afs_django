@@ -85,19 +85,19 @@ class Orders(models.Model):
     def client_status(self):
         # Słownik (mapa), który tłumaczy nasze statusy na statusy dla klienta
         status_map = {
-            self.TicketStatus.NEW: 'Nowe',
+            self.OrderStatus.NEW: 'Nowe',
             # Kilka różnych statusów wewnętrznych daje ten sam komunikat dla klienta
-            self.TicketStatus.WAITING_FOR_COMPONENTS: 'W realizacji',
-            self.TicketStatus.DISASSEMBLY: 'W realizacji',
-            self.TicketStatus.IN_PROGRESS: 'W realizacji',
-            self.TicketStatus.PR: 'W realizacji',
-            self.TicketStatus.IN_PROGRESS: 'W realizacji',
-            self.TicketStatus.READY_FOR_PICKUP: 'Gotowe do odbioru',
-            self.TicketStatus.SHIPPED: 'Wysłane',
-            self.TicketStatus.DELIVERED: 'Dostarczone',
-            self.TicketStatus.NOT_REPAIRABLE: 'Nie do naprawy',
-            self.TicketStatus.NOT_PROFITABLE: 'Naprawa nieopłacalna',
-            self.TicketStatus.CLOSED: 'Zamknięte',
+            self.OrderStatus.WAITING_FOR_COMPONENTS: 'W realizacji',
+            self.OrderStatus.DISASSEMBLY: 'W realizacji',
+            self.OrderStatus.IN_PROGRESS: 'W realizacji',
+            self.OrderStatus.PR: 'W realizacji',
+            self.OrderStatus.IN_PROGRESS: 'W realizacji',
+            self.OrderStatus.READY_FOR_PICKUP: 'Gotowe do odbioru',
+            self.OrderStatus.SHIPPED: 'Wysłane',
+            self.OrderStatus.DELIVERED: 'Dostarczone',
+            self.OrderStatus.NOT_REPAIRABLE: 'Nie do naprawy',
+            self.OrderStatus.NOT_PROFITABLE: 'Naprawa nieopłacalna',
+            self.OrderStatus.CLOSED: 'Zamknięte',
         }
         
         # Pobieramy przetłumaczony status. 
@@ -105,7 +105,7 @@ class Orders(models.Model):
         return status_map.get(self.status, 'Przetwarzane')
     
     def __str__(self):
-        return f"Ticket: {self.ticket_number} - {self.get_status_display()}"
+        return f"Order: {self.order_number} - {self.get_status_display()}"
     
     #Tabela numerów seryjnych - komponenty
 class OrdersSerialNumber(models.Model):
