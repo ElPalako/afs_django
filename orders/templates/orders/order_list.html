@@ -97,14 +97,13 @@
 				</thead>
 				<tbody class="divide-y divide-gray-200">
 					{% for order in orders %}
-					<tr
-						onclick="window.location='{% url 'order-detail' order.id %}'"
-						class="hover:bg-gray-50 cursor-pointer transition-colors group"
-					>
+					<tr class="hover:bg-gray-50 transition-colors group">
 						<td
 							class="px-6 py-4 font-bold text-gray-900 group-hover:text-primary"
 						>
-							{{ order.order_number }}
+							<a href="{% url 'order-detail' order.id %}" class="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors">
+								{{ order.order_number }}
+							</a>
 						</td>
 						<td class="px-6 py-4 text-gray-500">
 							{{ order.created_at|date:"d.m.Y, H:i" }}
@@ -117,8 +116,14 @@
 						<td class="px-6 py-4 text-gray-600">
 							{{ order.material}}
 						</td>
-						<td class="px-6 py-4 font-medium text-gray-700">
-							{{ order.qty }}
+						<td class="px-6 py-4 whitespace-nowrap">
+							<input type="number" 
+								name="qty" 
+								value="{{ order.qty }}"
+								hx-post="{% url 'update_order_qty_inline' order.id %}"
+								hx-trigger="blur changed"
+								hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+								class="bg-white border border-gray-300 shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded px-3 py-1.5 outline-none w-24 transition-all text-sm text-gray-900">
 						</td>
 					</tr>
 					{% empty %}
