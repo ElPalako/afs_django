@@ -1,33 +1,33 @@
-{% extends 'base.html' %} {% block title %}Lista RMA - Serviceportal{% endblock %} 
+{% extends 'base.html' %} {% block title %}Lista Zamówień - Serviceportal{% endblock %} 
 {% block content %}
 <div class="mb-6 flex justify-between items-end">
 	<div>
-		<h1 class="text-2xl font-bold text-gray-900">Zgłoszenia Serwisowe (RMA)</h1>
+		<h1 class="text-2xl font-bold text-gray-900">Zamówienia</h1>
 		<p class="text-sm text-gray-500 mt-1">
-			Zarządzaj wszystkimi naprawami w systemie.
+			Zarządzaj wszystkimi zamówieniami w systemie.
 		</p>
 	</div>
 	<a
-		href="{% url 'create-ticket' %}"
+		href="{% url 'create-order' %}"
 		class="bg-primary hover:bg-primaryHover text-black font-bold py-2 px-4 rounded-lg text-sm transition-colors"
 	>
-		+ Nowe Zgłoszenie
+		+ Nowe Zamówienie
 	</a>
 </div>
 
-<div id="ticket-table-container">
+<div id="order-table-container">
 	<div class="mb-4 flex gap-4 items-center">
 		<div class="relative w-full max-w-md">
 			<input
 				type="text"
 				name="q"
 				value="{{ search_query }}"
-				placeholder="Szukaj RMA, klienta lub numeru seryjnego..."
+				placeholder="Szukaj zamówienia..."
 				class="w-full !pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-				hx-get="{% url 'ticket-list' %}"
+				hx-get="{% url 'orders-list' %}"
 				hx-trigger="keyup changed delay:500ms"
-				hx-target="#ticket-table-container"
-				hx-select="#ticket-table-container"
+				hx-target="#order-table-container"
+				hx-select="#order-table-container"
 				hx-include="[name='sort']"
 			/>
 
@@ -60,77 +60,71 @@
 					<tr>
 						<th
 							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
-							hx-get="{% url 'ticket-list' %}?sort={% if current_sort == 'ticket_number' %}-ticket_number{% else %}ticket_number{% endif %}"
-							hx-target="#ticket-table-container"
-							hx-select="#ticket-table-container"
+							hx-get="{% url 'orders-list' %}?sort={% if current_sort == 'order_number' %}-order_number{% else %}order_number{% endif %}"
+							hx-target="#order-table-container"
+							hx-select="#order-table-container"
 							hx-include="[name='q']"
 						>
-							Numer RMA {% if current_sort == 'ticket_number' %} ↑ {% elif
-							current_sort == '-ticket_number' %} ↓ {% endif %}
+							Order number {% if current_sort == 'order_number' %} ↑ {% elif
+							current_sort == '-order_number' %} ↓ {% endif %}
 						</th>
 
 						<th
 							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
-							hx-get="{% url 'ticket-list' %}?sort={% if current_sort == '-created_at' %}created_at{% else %}-created_at{% endif %}"
-							hx-target="#ticket-table-container"
-							hx-select="#ticket-table-container"
+							hx-get="{% url 'orders-list' %}?sort={% if current_sort == '-created_at' %}created_at{% else %}-created_at{% endif %}"
+							hx-target="#order-table-container"
+							hx-select="#order-table-container"
 							hx-include="[name='q']"
 						>
-							Data zgłoszenia {% if current_sort == 'created_at' %}↑{% elif
+							Data zamówienia {% if current_sort == 'created_at' %}↑{% elif
 							current_sort == '-created_at' %}↓{% endif %}
 						</th>
 
 						<th
 							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
-							hx-get="{% url 'ticket-list' %}?sort={% if current_sort == 'customer__name' %}-customer__name{% else %}customer__name{% endif %}"
-							hx-target="#ticket-table-container"
-							hx-select="#ticket-table-container"
+							hx-get="{% url 'orders-list' %}?sort={% if current_sort == 'business_partner__name' %}-business_partner__name{% else %}business_partner__name{% endif %}"
+							hx-target="#order-table-container"
+							hx-select="#order-table-container"
 							hx-include="[name='q']"
 						>
-							Klient {% if current_sort == 'customer__name' %}↑{% elif
-							current_sort == '-customer__name' %}↓{% endif %}
+							Business partner {% if current_sort == 'business_partner__name' %}↑{% elif
+							current_sort == '-business_partner__name' %}↓{% endif %}
 						</th>
 
-						<th class="px-6 py-4 font-semibold">Urządzenie</th>
-						<th class="px-6 py-4 font-semibold">Status</th>
+						<th class="px-6 py-4 font-semibold">Material</th>
+						<th class="px-6 py-4 font-semibold">QTY</th>
 					</tr>
 				</thead>
 				<tbody class="divide-y divide-gray-200">
-					{% for ticket in tickets %}
+					{% for order in orders %}
 					<tr
-						onclick="window.location='{% url 'ticket-detail' ticket.id %}'"
+						onclick="window.location='{% url 'order-detail' order.id %}'"
 						class="hover:bg-gray-50 cursor-pointer transition-colors group"
 					>
 						<td
 							class="px-6 py-4 font-bold text-gray-900 group-hover:text-primary"
 						>
-							{{ ticket.ticket_number }}
+							{{ order.order_number }}
 						</td>
 						<td class="px-6 py-4 text-gray-500">
-							{{ ticket.created_at|date:"d.m.Y, H:i" }}
+							{{ order.created_at|date:"d.m.Y, H:i" }}
 						</td>
 						<td class="px-6 py-4">
 							<div class="font-medium text-gray-900">
-								{{ ticket.customer.name }}
-							</div>
-							<div class="text-xs text-gray-400">
-								{{ ticket.customer.email }}
+								{{ order.business_partner.name }}
 							</div>
 						</td>
 						<td class="px-6 py-4 text-gray-600">
-							{{ ticket.device_model.name}}<br />
-							<span class="text-xs text-gray-400"
-								>SN: {{ ticket.serial_number }}</span
-							>
+							{{ order.material}}
 						</td>
 						<td class="px-6 py-4 font-medium text-gray-700">
-							{{ ticket.get_status_display }}
+							{{ order.qty }}
 						</td>
 					</tr>
 					{% empty %}
 					<tr>
 						<td colspan="5" class="px-6 py-10 text-center text-gray-500">
-							Brak zgłoszeń pasujących do Twoich kryteriów.
+							Brak zamówień pasujących do Twoich kryteriów.
 						</td>
 					</tr>
 					{% endfor %}

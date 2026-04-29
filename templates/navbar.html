@@ -11,6 +11,7 @@
                 
                 <div class="hidden sm:flex sm:space-x-8">
                     
+                    <!-- Przycisk RMA -->
                     <div class="relative group flex items-center">
                         <button class="text-gray-500 group-hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-600 text-sm font-medium transition-all duration-200 h-full">
                             RMA
@@ -21,6 +22,21 @@
                             <div class="py-2">
                                 <a href="{% url 'ticket-list' %}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Zgłoszenia</a>
                                 <a href="{% url 'create-ticket' %}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Utwórz nowe zgłoszenie</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Przycisk Zamówienia -->
+                    <div class="relative group flex items-center">
+                        <button class="text-gray-500 group-hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-600 text-sm font-medium transition-all duration-200 h-full">
+                            Zamówienia
+                            <svg class="ml-1.5 h-4 w-4 transition-transform duration-200 group-hover:-rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        
+                        <div class="absolute left-0 top-full w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top group-hover:translate-y-0 translate-y-2">
+                            <div class="py-2">
+                                <a href="{% url 'create-order' %}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Nowe zamówienie</a>
+                                <a href="{% url 'orders-list' %}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">Zamówienia</a>
                             </div>
                         </div>
                     </div>

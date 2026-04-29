@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Zamówienie {{ order.order_number }}{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-sm font-bold text-gray-400 uppercase mb-4">Dane Klienta</h3>
+            <p class="font-bold text-gray-900">{{ order.business_partner.name }}</p>
+            <p class="text-sm text-gray-600 mt-1">{{ order.business_partner.partner_type }}</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-sm font-bold text-gray-400 uppercase mb-4">Pozostałe informacje</h3>
+            <p class="font-bold text-gray-900">{{ order.material }}</p>
+            <p class="text-sm text-gray-600 mt-1">QTY: <span class="font-mono bg-gray-100 px-1 rounded">{{ order.qty }}</span></p>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

@@ -45,7 +45,8 @@ class Orders(models.Model):
         OOW = 'OUT_OF_WARRANTY', 'Poza gwarancją'
         BUFFER = 'BUFFER', 'Buffer'
     status = models.CharField(choices=OrderStatus, default=OrderStatus.NEW)
-    order_number = models.CharField(max_length=50)
+    order_number = models.CharField(max_length=50, blank=True, null=True)
+    purpose = models.CharField(choices=Purpose, default='IN_WARRANTY')
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.RESTRICT, null=True, blank=True)
     ticket = models.ForeignKey(
@@ -60,21 +61,22 @@ class Orders(models.Model):
     material = models.CharField(max_length=50, null=True)
     qty = models.IntegerField()
     description = models.CharField(max_length=255)
-    qty_to_be_realized = models.IntegerField()
-    internal_order_number = models.CharField()
+    qty_to_be_realized = models.IntegerField(default=0)
+    internal_order_number = models.CharField(null=True)
     material_prepared = models.CharField(max_length=50, null=True)
-    qty_prepared = models.IntegerField()
+    qty_prepared = models.IntegerField(default=0)
     tracking = models.ForeignKey(
         OrdersTracking,
         on_delete=models.RESTRICT,
+        null=True,
     )
-    comment = models.TextField()
-    comment_for_tpm = models.TextField()
-    fulfillment_start_date = models.DateField()
+    comment = models.TextField(null=True)
+    comment_for_tpm = models.TextField(null=True)
+    fulfillment_start_date = models.DateField(null=True)
     fulfillment_comment = models.CharField(max_length=255)
-    fulfillment_finish_date = models.DateField()
-    material_price_pln = models.DecimalField(max_digits=10, decimal_places=2)
-    material_price_eur = models.DecimalField(max_digits=10, decimal_places=2)
+    fulfillment_finish_date = models.DateField(null=True)
+    material_price_pln = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    material_price_eur = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     article_number = models.CharField(max_length=50)
     original_article_number = models.CharField(max_length=50)
     
