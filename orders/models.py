@@ -7,20 +7,24 @@ class OrdersTracking(models.Model):
     class ParcelType(models.TextChoices):
         PACKAGE = 'PACKAGE', 'Paczka'
         PALLET = 'PALLET', 'Paleta'
-    tracking = models.CharField(max_length=100)
-    carrier = models.CharField(max_length=50)
-    shipment_date = models.DateField()
-    delivery_date = models.DateField()
-    comment = models.TextField()
-    status = models.CharField(max_length=100)
-    parcel_type = models.CharField(choices=ParcelType)
-    size = models.CharField()
-    dimensions = models.CharField()
-    weight = models.CharField()
-    carrier_documents = models.CharField()
-    customs_documents = models.CharField()
-    packing_list = models.CharField()
-    fv_proforma = models.CharField()
+    class ParcelStatus(models.TextChoices):
+        NEW = 'NEW', 'Nowa'
+        ORDERED = 'ORDERED', 'Zlecona'
+        DELVIERED = 'DELIVERED', 'Dostarczona'
+    tracking = models.CharField(max_length=100, null=True, blank=True)
+    carrier = models.CharField(max_length=50, null=True, blank=True)
+    shipment_date = models.DateField(null=True, blank=True)
+    delivery_date = models.DateField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    status = models.CharField(choices=ParcelStatus, default='NEW')
+    parcel_type = models.CharField(choices=ParcelType, null=True, blank=True)
+    size = models.CharField(null=True, blank=True)
+    dimensions = models.CharField(null=True, blank=True)
+    weight = models.CharField(null=True, blank=True)
+    carrier_documents = models.CharField(null=True, blank=True)
+    customs_documents = models.CharField(null=True, blank=True)
+    packing_list = models.CharField(null=True, blank=True)
+    fv_proforma = models.CharField(null=True, blank=True)
     recipient_id = models.ForeignKey(
         BusinessPartner,
         on_delete = models.RESTRICT,
@@ -58,27 +62,28 @@ class Orders(models.Model):
         BusinessPartner,
         on_delete=models.RESTRICT,       
     )
-    material = models.CharField(max_length=50, null=True)
+    material = models.CharField(max_length=50, null=True, blank=True)
     qty = models.IntegerField()
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, null=True, blank=True)
     qty_to_be_realized = models.IntegerField(default=0)
-    internal_order_number = models.CharField(null=True)
-    material_prepared = models.CharField(max_length=50, null=True)
+    internal_order_number = models.CharField(null=True, blank=True)
+    material_prepared = models.CharField(max_length=50, null=True, blank=True)
     qty_prepared = models.IntegerField(default=0)
     tracking = models.ForeignKey(
         OrdersTracking,
         on_delete=models.RESTRICT,
         null=True,
+        blank=True,
     )
-    comment = models.TextField(null=True)
-    comment_for_tpm = models.TextField(null=True)
+    comment = models.TextField(null=True, blank=True)
+    comment_for_tpm = models.TextField(null=True, blank=True)
     fulfillment_start_date = models.DateField(null=True)
-    fulfillment_comment = models.CharField(max_length=255)
+    fulfillment_comment = models.CharField(max_length=255, null=True, blank=True)
     fulfillment_finish_date = models.DateField(null=True)
     material_price_pln = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     material_price_eur = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    article_number = models.CharField(max_length=50)
-    original_article_number = models.CharField(max_length=50)
+    article_number = models.CharField(max_length=50, null=True, blank=True)
+    original_article_number = models.CharField(max_length=50, null=True, blank=True)
     
     
     @property
@@ -110,7 +115,7 @@ class Orders(models.Model):
     #Tabela numerów seryjnych - komponenty
 class OrdersSerialNumber(models.Model):
     serial_number = models.CharField(max_length=100)
-    serial_number_scep = models.CharField(max_length=100)
+    serial_number_scep = models.CharField(max_length=100, null=True, blank=True)
     order = models.ForeignKey(
         Orders,
         on_delete=models.RESTRICT,
