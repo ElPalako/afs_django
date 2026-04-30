@@ -1,11 +1,11 @@
 {% extends 'base_auth.html' %}
 
-{% block title %}Załóż konto - AfterSales Pro{% endblock %}
+{% block title %}Create account - AfterSales Pro{% endblock %}
 
 {% block content %}
 <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
     <div class="text-center mb-8">
-        <h1 class="text-3xl font-extrabold text-gray-900">Dołącz do <span class="text-blue-600">Pro</span></h1>
+        <h1 class="text-3xl font-extrabold text-gray-900">Join and became <span class="text-blue-600">Pro</span></h1>
         <p class="text-gray-500 mt-2 text-sm">Wypełnij formularz, aby założyć konto.</p>
     </div>
 
@@ -26,13 +26,13 @@
 
         <button type="submit" 
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors shadow-sm mt-4">
-            Zarejestruj się
+            Sign up
         </button>
     </form>
 
     <div class="mt-6 text-center text-sm">
-        <span class="text-gray-500">Masz już konto?</span>
-        <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Zaloguj się</a>
+        <span class="text-gray-500">Already have an account?</span>
+        <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Log in</a>
     </div>
 </div>
 {% endblock %}

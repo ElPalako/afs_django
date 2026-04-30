@@ -10,12 +10,12 @@ class Customer(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name}"
+        return (self.name)
     
 #Tabela partnerów binzesowych
 class BusinessPartner(models.Model):
     class PartnerType(models.TextChoices):
-        SCEP = 'SCEP', 'Sharp Consumer Electronics Poland sp. z o.o.'
+        SCEP = 'SCEP', 'SCEP'
         MANUFACTURER = 'MANUFACTURER', 'Producent'
         DISTRIBUTOR = 'DISTRIBUTOR', 'Dystrybutor'
         SERVICE_CENTER = 'SERVICE_CENTER', 'Serwis Zewnętrzny'
@@ -26,7 +26,7 @@ class BusinessPartner(models.Model):
     partner_type = models.CharField(max_length=20, choices=PartnerType.choices, default=PartnerType.SERVICE_CENTER)
     
     def __str__(self):
-        return f"BusinessPartner: {self.name} ({self.get_partner_type_display()})"
+        return f"{self.name} ({self.get_partner_type_display()})"
 
 #Tabela modeli urządzeń
 class DeviceModel(models.Model):
@@ -38,16 +38,16 @@ class DeviceModel(models.Model):
         EBIKE = 'Ebike', 'Rower elektryczny' 
         ESC = 'Escooter', 'Hulajnoga elektryczna'
     
-    name = models.CharField(max_length=150)
+    fg_code = models.CharField(max_length=50, db_index=True, unique=True)
+    model_name = models.CharField(max_length=150)
     manufacturer = models.ForeignKey(
         BusinessPartner, 
         on_delete=models.RESTRICT, 
         limit_choices_to={'partner_type': 'MANUFACTURER'})
-    device_category = models.CharField(max_length=200, choices=DeviceCategory.choices, null=True)
-
+    device_category = models.CharField(max_length=200, choices=DeviceCategory.choices, null=True) 
 
     def __str__(self):
-        return f"DeviceModel: {self.name} {self.manufacturer.name}"
+        return f"{self.fg_code}"
 
 #Tabela zgłoszeń serwisowych
 class ServiceTicket(models.Model):
@@ -55,16 +55,16 @@ class ServiceTicket(models.Model):
         OPEN = 'OPEN', 'Otwarte'
         IN_PROGRESS = 'IN_PROGRESS', 'W realizacji'
         WAITING_FOR_COMPONENTS = 'WAITING_FOR_COMPONENTS', 'Czekające na części'
-        DISSASEMBLY = "DISSASEMBLY", "Oczekuja na demontaż"
+        DISASSEMBLY = "DISASSEMBLY", "Oczekuja na demontaż"
         READY_FOR_PICKUP = 'READY_FOR_PICKUP', 'Gotowe do odbioru'
         SHIPPED = 'SHIPPED', 'Wysłane'
         DELIVERED = 'DELIVERED', 'Dostarczone'
         NOT_REPAIRABLE = 'NOT_REPAIRABLE', 'Nie do naprawy'
         CLOSED = 'CLOSED', 'Zamknięte'
-    ticket_number = models.CharField(max_length=50, unique=True)
+    ticket_number = models.CharField(max_length=50, unique=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.RESTRICT, null=True, blank=True)
-    serial_number = models.CharField(max_length=100)
+    serial_number = models.CharField(max_length=100, db_index=True)
     is_warranty = models.BooleanField(default=True)
     purchase_date = models.DateField(blank=True, null=True)
     repair_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -93,7 +93,7 @@ class ServiceTicket(models.Model):
         return status_map.get(self.status, 'Przetwarzane')
     
     def __str__(self):
-        return f"Ticket: {self.ticket_number} - {self.get_status_display()}"
+        return self.ticket_number
     
 class ComponentCategory(models.Model):
     category_name = models.CharField(max_length=255, unique=True)
@@ -101,11 +101,10 @@ class ComponentCategory(models.Model):
     sn_need = models.BooleanField(default=False)
     
     def __str__(self):
-        return (self.category_name)
+        return self.category_name
     
 class Component(models.Model):
-    part_number = models.CharField(max_length=100, unique=True)
-    name = models.CharField(max_length=150)
+    part_number = models.CharField(max_length=100, unique=True, db_index=True)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     moq = models.PositiveIntegerField(default=1) # Minimum Order Quantity
@@ -122,7 +121,7 @@ class Component(models.Model):
         null=True)
     
     def __str__(self):
-        return f"Component: {self.part_number} for {self.name}"
+        return f"{self.part_number} - {self.description}"
     
 #Tabela ze stockiem magazynowym
 class Stock(models.Model):
@@ -130,11 +129,12 @@ class Stock(models.Model):
         Component, 
         on_delete=models.RESTRICT)
     quantity = models.PositiveIntegerField(default=0)
-    storage_location = models.CharField(max_length=10, blank=True, null=True) # Lokalizacja w magazynie
-    plant = models.CharField(max_length=10, blank=True, null=True) # Lokalizacja w magazynie
+    storage_location = models.CharField(max_length=10, blank=True, null=True)
+    plant = models.CharField(max_length=10, blank=True, null=True)
+    vendor = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return f"Stock: {self.component.part_number} - {self.quantity} pcs at {self.storage_location}"
+        return f"{self.component.part_number} - {self.quantity} pcs at {self.storage_location}"
 
 #Komponenty użyte w naprawie
 class TicketComponent(models.Model):
@@ -147,4 +147,4 @@ class TicketComponent(models.Model):
     quantity_used = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"TicketComponent: {self.component.part_number}, {self.quantity_used} used in {self.ticket_number.ticket_number}"
+        return f"{self.component.part_number}, {self.quantity_used} used in {self.ticket_number.ticket_number}"

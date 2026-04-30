@@ -6,36 +6,40 @@ admin.site.register(Customer)
 admin.site.register(BusinessPartner)
 admin.site.register(TicketComponent)
 
-# Rejestracja zaawansowana - widok tabeli@admin.register(Stock)
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
+    _my_fields = ('id','component', 'quantity', 'storage_location', 'plant', 'vendor')
     # Kolumny, które chcemy widzieć w tabeli
-    list_display = ('component', 'quantity', 'storage_location')
+    list_display = _my_fields
     # Filtry po prawej stronie ekranu
-    list_filter = ('storage_location', 'component__manufacturer')
+    list_filter = _my_fields
     # Pasek wyszukiwania!
-    search_fields = ('component__name', 'component__part_number')
+    search_fields = _my_fields
 
 @admin.register(ServiceTicket)
 class ServiceTicketAdmin(admin.ModelAdmin):
-    list_display = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at', 'business_partner', 'description')
-    list_filter = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at', 'business_partner', 'description')
-    search_fields = ('ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at', 'business_partner', 'description')
+    _my_fields = ('id','ticket_number', 'customer', 'device_model', 'is_warranty', 'purchase_date', 'status', 'created_at', 'business_partner', 'description')
+    list_display = _my_fields
+    list_filter = _my_fields
+    search_fields = _my_fields
     
 @admin.register(DeviceModel)
 class DeviceModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'manufacturer', 'device_category')
-    list_filter = ('name', 'manufacturer', 'device_category')
-    search_fields = ('name', 'manufacturer', 'device_category')
+    _my_fields = ('id','fg_code','model_name', 'manufacturer', 'device_category')
+    list_display = _my_fields
+    list_filter = _my_fields
+    search_fields = _my_fields
 
 @admin.register(Component)    
 class ComponentAdmin(admin.ModelAdmin):
-    list_display = ('part_number', 'name', 'description', 'price', "moq", 'manufacturer', 'category')
-    list_filter = ('part_number', 'name', 'description', 'price', "moq", 'manufacturer', 'category')
-    search_fields = ('part_number', 'name', 'description', 'price', "moq", 'manufacturer', 'category')
+    _my_fields = ('id','part_number', 'description', 'price', "moq", 'manufacturer', 'category')
+    list_display = _my_fields
+    list_filter = _my_fields
+    search_fields = _my_fields
     
 @admin.register(ComponentCategory)    
 class ComponentCategoryAdmin(admin.ModelAdmin):
-    list_display = ('category_name', 'description', 'sn_need')
-    list_filter = ('category_name', 'description', 'sn_need')
-    search_fields = ('category_name', 'description', 'sn_need')
+    _my_fields = ('id','category_name', 'description', 'sn_need')
+    list_display = _my_fields
+    list_filter = _my_fields
+    search_fields = _my_fields

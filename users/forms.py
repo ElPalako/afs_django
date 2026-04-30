@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, Passw
 from django import forms 
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True, label="Adres e-mail")
+    email = forms.EmailField(required=True, label="E-mail address")
     
     class Meta:
         model = User
