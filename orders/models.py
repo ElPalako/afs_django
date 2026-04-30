@@ -63,12 +63,12 @@ class Orders(models.Model):
         on_delete=models.RESTRICT,       
     )
     material = models.CharField(max_length=50, null=True, blank=True)
-    qty = models.IntegerField()
+    qty = models.PositiveIntegerField()
     description = models.CharField(max_length=255, null=True, blank=True)
-    qty_to_be_realized = models.IntegerField(default=0)
+    qty_to_be_realized = models.PositiveIntegerField(default=0)
     internal_order_number = models.CharField(null=True, blank=True)
     material_prepared = models.CharField(max_length=50, null=True, blank=True)
-    qty_prepared = models.IntegerField(default=0)
+    qty_prepared = models.PositiveIntegerField(default=0)
     tracking = models.ForeignKey(
         OrdersTracking,
         on_delete=models.RESTRICT,
