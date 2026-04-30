@@ -115,7 +115,7 @@
 						</td>
 						<td class="px-6 py-4 text-gray-600">
 							<input type="text" 
-								name="qty" 
+								name="material" 
 								value="{{ order.material }}"
 								hx-post="{% url 'update_order_inline' order.id %}"
 								hx-trigger="blur changed"
