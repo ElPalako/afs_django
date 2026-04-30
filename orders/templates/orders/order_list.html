@@ -114,13 +114,19 @@
 							</div>
 						</td>
 						<td class="px-6 py-4 text-gray-600">
-							{{ order.material}}
+							<input type="text" 
+								name="qty" 
+								value="{{ order.material }}"
+								hx-post="{% url 'update_order_inline' order.id %}"
+								hx-trigger="blur changed"
+								hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+								class="bg-white border border-gray-300 shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded px-3 py-1.5 outline-none w-24 transition-all text-sm text-gray-900">
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap">
 							<input type="number" 
 								name="qty" 
 								value="{{ order.qty }}"
-								hx-post="{% url 'update_order_qty_inline' order.id %}"
+								hx-post="{% url 'update_order_inline' order.id %}"
 								hx-trigger="blur changed"
 								hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
 								class="bg-white border border-gray-300 shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded px-3 py-1.5 outline-none w-24 transition-all text-sm text-gray-900">

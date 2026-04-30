@@ -7,5 +7,5 @@ urlpatterns = [
     path('nowe-zamówienie/', views.create_order_view, name='create-order'),
     path('zamówienie/<int:order_id>/', views.order_detail_view, name='order-detail'),
     # "Niewidzialny" endpoint do edycji w locie
-    path('zamówienie/<int:order_id>/update-qty/', views.update_order_qty_inline, name='update_order_qty_inline'),
+    path('zamówienie/<int:order_id>/update-inline/', views.update_order_inline, name='update_order_inline'),
 ]

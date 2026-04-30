@@ -96,24 +96,29 @@ def order_detail_view(request, order_id):
     return render(request, 'orders/order_detail.html', context)
 
 @login_required(login_url='login')
-def update_order_qty_inline(request, order_id):
+def update_order_inline(request, order_id):
     # Upewniamy się, że zapytanie to HTMX
     if request.method == 'POST' and request.headers.get('HX-Request'):
-        # 1. Wyciągamy zamówienie, ale TYLKO z firmy zalogowanego użytkownika
+        # Wyciągamy zamówienie, ale TYLKO z firmy zalogowanego użytkownika
         try:
             order = Orders.objects.get(id=order_id, business_partner=request.user.profile.company)
         except Orders.DoesNotExist:
             return HttpResponse("Brak dostępu", status=403)
         
-        # 2. Pobieramy nową wartość z inputa
-        new_qty = request.POST.get('qty')
+        # Wymieniamy pola, na których edycję z poziomu tabeli pozwalamy
+        allowed_fields = ['qty', 'material']
         
-        # 3. Zapisujemy do bazy, jeśli coś wpisano
-        if new_qty:
-            order.qty = new_qty
-            order.save()
+        # HTMX wysyła dane w formie słownika, np. {'qty': '5'} lub {'material': 'SHW/RMC/0001N'}
+        # Przeszukujemy naszą białą listę i sprawdzamy, czy takie pole przyszło w POST
+        for field in allowed_fields:
+            if field in request.POST:
+                new_value = request.POST.get(field)
+                
+                # setattr() podmienia dynamicznie pole
+                setattr(order, field, new_value)
+                order.save()
         
-        # 4. Zwracamy samą liczbę. HTMX weźmie ją i wklei do HTML-a.
-        return HttpResponse(order.qty)
+                # Zwracamy zaktualizowaną wartość wyciągniętą prosto z obiektu
+                return HttpResponse(order.qty)
     
     return HttpResponse(status=400)
