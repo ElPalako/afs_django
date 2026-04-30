@@ -10,4 +10,4 @@ class UserProfile(models.Model):
     address = models.TextField(blank=True, null=True)
     
     def __str__(self):
-        return f"UserProfile: {self.user.username} - {self.company()}"
+        return f"UserProfile: {self.user.username} - {self.company}"

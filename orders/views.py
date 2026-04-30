@@ -77,11 +77,8 @@ def orders_list_view(request):
     }
     return render(request, 'orders/order_list.html', context)
 
-def order_detail_view(request):
-    order = Orders.objects.all()
-    return render(request, 'orders/order_detail.html')
-
 @login_required(login_url='login')
+@user_passes_test(can_create_update_order, login_url='/')
 def order_detail_view(request, order_id):
     # Szukamy zgłoszenia, jeśli go nie ma - wyrzucamy błąd 404 (nie znaleziono)
     order = get_object_or_404(Orders, id=order_id)
@@ -96,6 +93,7 @@ def order_detail_view(request, order_id):
     return render(request, 'orders/order_detail.html', context)
 
 @login_required(login_url='login')
+@user_passes_test(can_create_update_order, login_url='/')
 def update_order_inline(request, order_id):
     # Upewniamy się, że zapytanie to HTMX
     if request.method == 'POST' and request.headers.get('HX-Request'):
