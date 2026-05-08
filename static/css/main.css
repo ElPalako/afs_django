@@ -1,7 +1,59 @@
 /* static/css/main.css */
+
+/* Definicja kolorów i stałych */
+:root {
+    --primary-color: #2c3e50;    /* Ciemny granat dla nagłówków */
+    --accent-color: #3498db;     /* Niebieski dla przycisków i linków */
+    --bg-color: #f9f9f9;         /* Bardzo jasne tło strony */
+    --card-bg: #ffffff;          /* Białe tło dla kart */
+    --text-color: #333333;       /* Ciemnoszary tekst (lepszy niż czysty czarny) */
+    --border-color: #dddddd;     /* Kolor linii i obramowań */
+    --container-width: 1100px;     /* Maksymalna szerokość treści */
+}
+
 body {
-    /* Delikatny efekt płynnego przewijania dla całej strony */
-    scroll-behavior: smooth; 
+    scroll-behavior: smooth; /* Delikatny efekt płynnego przewijania dla całej strony */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar__logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.navbar__menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    margin-left: 20px;
+    transition: color 0.3s;
+}
+
+.navbar__menu a:hover {
+    color: var(--accent-color);
 }
 
 /* Standardowe pole tekstowe i listy rozwijane */
@@ -32,6 +84,28 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
+/* Przycisk w stylu klasycznym */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn--primary {
+    background-color: var(--accent-color);
+    color: white;
+    border: 1px solid var(--accent-color);
+}
+
+.btn--primary:hover {
+    background-color: #2980b9; /* Nieco ciemniejszy niebieski */
+    transform: translateY(-2px); /* Delikatne uniesienie */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 /* Główny przycisk akcji (np. Zapisz, Dodaj) */
 .btn-submit {
     background-color: #2563eb;
