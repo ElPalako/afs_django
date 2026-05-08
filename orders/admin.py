@@ -1,5 +1,6 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
+from import_export.admin import ImportExportMixin
 from .models import Orders, OrdersTracking, OrdersSerialNumber
 
 # Rejestrujemy wszystkie nasze modele, żeby były widoczne w panelu admina
@@ -8,7 +9,7 @@ admin.site.register(OrdersSerialNumber)
 
 # Rejestracja zaawansowana - widok tabeli@admin.register(Stock)
 @admin.register(Orders)
-class OrdersAdmin(SimpleHistoryAdmin):
+class OrdersAdmin(ImportExportMixin, SimpleHistoryAdmin): # Kolejność ma znaczenie
     # Pomocnicza zmienna (zwykle z podłogą na początku, żeby pokazać, że jest "prywatna")
     _my_fields = ('order_number', 'qty', 'material')
     # Kolumny, które chcemy widzieć w tabeli
