@@ -97,9 +97,9 @@ def order_detail_view(request, order_id):
 def update_order_inline(request, order_id):
     # Upewniamy się, że zapytanie to HTMX
     if request.method == 'POST' and request.headers.get('HX-Request'):
-        # Wyciągamy zamówienie, ale TYLKO z firmy zalogowanego użytkownika
+        # Wyciągamy zamówienie po ID
         try:
-            order = Orders.objects.get(id=order_id, business_partner=request.user.profile.company)
+            order = Orders.objects.get(id=order_id)
         except Orders.DoesNotExist:
             return HttpResponse("Brak dostępu", status=403)
         

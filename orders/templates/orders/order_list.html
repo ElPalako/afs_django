@@ -10,7 +10,7 @@
 		</p>
 	</div>
 	<a
-		href="{% url 'create-order' %}"
+		href="{% url 'create_order' %}"
 		class="bg-primary hover:bg-primaryHover text-black font-bold py-2 px-4 rounded-lg text-sm transition-colors"
 	>
 		+ Nowe Zamówienie
@@ -26,7 +26,7 @@
 				value="{{ search_query }}"
 				placeholder="Szukaj zamówienia..."
 				class="w-full !pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-				hx-get="{% url 'orders-list' %}"
+				hx-get="{% url 'orders_list' %}"
 				hx-trigger="keyup changed delay:500ms"
 				hx-target="#order-table-container"
 				hx-select="#order-table-container"
@@ -62,7 +62,7 @@
 					<tr>
 						<th
 							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
-							hx-get="{% url 'orders-list' %}?sort={% if current_sort == 'order_number' %}-order_number{% else %}order_number{% endif %}"
+							hx-get="{% url 'orders_list' %}?sort={% if current_sort == 'order_number' %}-order_number{% else %}order_number{% endif %}"
 							hx-target="#order-table-container"
 							hx-select="#order-table-container"
 							hx-include="[name='q']"
@@ -73,7 +73,7 @@
 
 						<th
 							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
-							hx-get="{% url 'orders-list' %}?sort={% if current_sort == '-created_at' %}created_at{% else %}-created_at{% endif %}"
+							hx-get="{% url 'orders_list' %}?sort={% if current_sort == '-created_at' %}created_at{% else %}-created_at{% endif %}"
 							hx-target="#order-table-container"
 							hx-select="#order-table-container"
 							hx-include="[name='q']"
@@ -84,7 +84,7 @@
 
 						<th
 							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
-							hx-get="{% url 'orders-list' %}?sort={% if current_sort == 'business_partner__name' %}-business_partner__name{% else %}business_partner__name{% endif %}"
+							hx-get="{% url 'orders_list' %}?sort={% if current_sort == 'business_partner__name' %}-business_partner__name{% else %}business_partner__name{% endif %}"
 							hx-target="#order-table-container"
 							hx-select="#order-table-container"
 							hx-include="[name='q']"
@@ -103,7 +103,7 @@
 						<td
 							class="px-6 py-4 font-bold text-gray-900 group-hover:text-primary"
 						>
-							<a href="{% url 'order-detail' order.id %}" class="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors">
+							<a href="{% url 'order_detail' order.id %}" class="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors">
 								{{ order.order_number }}
 							</a>
 						</td>
