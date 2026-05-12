@@ -5,7 +5,7 @@ from .models import UserProfile
 @admin.register(UserProfile)
 class USerProfileAdmin(admin.ModelAdmin):
     # Pomocnicza zmienna (zwykle z podłogą na początku, żeby pokazać, że jest "prywatna")
-    _my_fields = ('user', 'company', 'phone', 'address')
+    _my_fields = ('user', 'email','company', 'phone')
     # Kolumny, które chcemy widzieć w tabeli
     list_display = _my_fields
     # Filtry po prawej stronie ekranu
