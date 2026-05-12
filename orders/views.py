@@ -47,8 +47,8 @@ def orders_list_view(request):
     search_query = request.GET.get('q', '')
     sort_by = request.GET.get('sort', '-created_at') # Domyślnie od najnowszych
     
-    # Podstawowe zapytanie (wszystkie tickety)
-    orders = Orders.objects.filter(business_partner=request.user.profile.company).select_related('business_partner')
+    # Zapytanie obsługiwane przez Managera: BaseCompanyManager
+    orders = Orders.objects.for_user(request.user).select_related('business_partner')
     
     # 2. Filtrujemy po wyszukiwaniu
     if search_query:

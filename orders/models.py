@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from after_sales.models import BusinessPartner, ServiceTicket, Component
 from simple_history.models import HistoricalRecords
+from core.managers import BaseCompanyManager
 
 #Tabela trackingów - komponenty
 class OrdersTracking(models.Model):
@@ -86,6 +87,7 @@ class Orders(models.Model):
     article_number = models.CharField(max_length=50, null=True, blank=True)
     original_article_number = models.CharField(max_length=50, null=True, blank=True)
     history = HistoricalRecords()
+    objects = BaseCompanyManager()
     
     @property
     def client_status(self):
