@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from after_sales.models import BusinessPartner, ServiceTicket
 from simple_history.models import HistoricalRecords
 from core.managers import BaseCompanyManager
 
@@ -28,7 +27,7 @@ class OrdersTracking(models.Model):
     packing_list = models.CharField(null=True, blank=True)
     fv_proforma = models.CharField(null=True, blank=True)
     recipient_id = models.ForeignKey(
-        BusinessPartner,
+        'after_sales.BusinessPartner',
         on_delete = models.RESTRICT,
     )
 
@@ -56,12 +55,13 @@ class Orders(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.RESTRICT, null=True, blank=True)
     ticket = models.ForeignKey(
-        ServiceTicket,
+        'after_sales.ServiceTicket',
         on_delete=models.RESTRICT,
-        null=True
+        null=True,
+        blank=True
     )
     business_partner = models.ForeignKey(
-        BusinessPartner,
+        'after_sales.BusinessPartner',
         on_delete=models.RESTRICT,       
     )
     material = models.CharField(max_length=50, null=True, blank=True)

@@ -9,7 +9,7 @@
             
             <select name="status" 
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary p-2"
-                    hx-post="{% url 'update-status' ticket.id %}" 
+                    hx-post="{% url 'update_status' ticket.id %}" 
                     hx-target="#status-container"
                     hx-swap="innerHTML"
                     hx-trigger="change"

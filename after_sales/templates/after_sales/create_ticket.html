@@ -9,7 +9,7 @@
 	</h2>
 
 	<form
-		hx-post="/nowe-zgloszenie/"
+		hx-post="{% url 'create_ticket' %}"
 		hx-swap="outerHTML"
 		hx-select="form"
 		class="space-y-5"
@@ -30,7 +30,7 @@
 		{% endfor %}
 
 		<button type="submit" class="btn-submit">Zapisz Zgłoszenie</button>
-		<a href="{% url 'ticket-list' %}" class="btn-cancel text-center block">Anuluj</a>
+		<a href="{% url 'ticket_list' %}" class="btn-cancel text-center block">Anuluj</a>
 	</form>
 </div>
 {% endblock content %}

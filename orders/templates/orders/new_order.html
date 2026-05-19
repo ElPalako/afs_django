@@ -9,7 +9,7 @@
 	</h2>
 
 	<form
-		hx-post="/nowe-zamówienie/"
+		hx-post="{% url 'create_order' %}"
 		hx-swap="outerHTML"
 		hx-select="form"
 		class="space-y-5"
