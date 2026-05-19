@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-#Tabela klientów
+# Klienci (użytkownicy końcowi)
 class Customer(models.Model):
     name = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
@@ -12,16 +12,7 @@ class Customer(models.Model):
     def __str__(self):
         return (self.name)
     
-#Tabela z branchami
-class BusinessPartnerBranch(models.Model):
-    created_by = models.ForeignKey(User, on_delete=models.RESTRICT ,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=255)
-        
-    def __str__(self):
-        return f"{self.name}"
-    
-#Tabela partnerów binzesowych
+# Firmy, partnerzy biznesowi
 class BusinessPartner(models.Model):
     class PartnerType(models.TextChoices):
         SCEP = 'SCEP', 'SCEP'
@@ -34,7 +25,6 @@ class BusinessPartner(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     name = models.CharField(max_length=255)
     partner_type = models.CharField(max_length=20, choices=PartnerType.choices, default=PartnerType.SERVICE_CENTER)
-    main_branch = models.ForeignKey(BusinessPartnerBranch, on_delete=models.RESTRICT, null=True)
     administrator = models.ForeignKey('users.UserProfile', on_delete=models.RESTRICT, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     company_number = models.CharField(max_length=50, null=True, blank=True)
@@ -56,6 +46,29 @@ class BusinessPartner(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.get_partner_type_display()})"
+
+# Branche firm
+class BusinessPartnerBranch(models.Model):
+    created_by = models.ForeignKey(User, on_delete=models.RESTRICT ,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255)
+    is_main_branch = models.BooleanField(default=False)
+    business_partner_id = models.ForeignKey(BusinessPartner, on_delete=models.RESTRICT, null=True)
+    is_active = models.BooleanField(default=True)
+    contact_email = models.EmailField(null=True, blank=True)
+    phone_number = models.CharField(max_length=50, null=True, blank=True)
+    parts_email = models.EmailField(null=True, blank=True)
+    parts_phone = models.CharField(max_length=50, null=True, blank=True)
+    service_email = models.EmailField(null=True, blank=True)
+    service_phone = models.CharField(max_length=50, null=True, blank=True)
+    street_name = models.CharField(max_length=255, null=True, blank=True)
+    street_number = models.CharField(max_length=50, null=True, blank=True)
+    postal_code = models.CharField(max_length=50, null=True, blank=True)
+    city = models.CharField(max_length=50, null=True, blank=True)
+    country = models.CharField(max_length=50, null=True, blank=True)
+        
+    def __str__(self):
+        return f"{self.name}, {self.business_partner_id.name}"
 
 #Tabela zgłoszeń serwisowych
 class ServiceTicket(models.Model):
