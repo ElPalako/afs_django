@@ -52,7 +52,7 @@ class BusinessPartner(models.Model):
     country = models.CharField(max_length=50, null=True, blank=True)
     delivery_terms = models.CharField(max_length=50, null=True, blank=True)
     fv_proforma = models.BooleanField(default=True)
-    margin = models.IntegerField(null=True, blank=True)
+    margin = models.ForeignKey("finance.Margin", on_delete=models.RESTRICT, null=True, blank=True)
     
     def __str__(self):
         return f"{self.name} ({self.get_partner_type_display()})"
