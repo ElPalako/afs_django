@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from after_sales.models import BusinessPartner, ServiceTicket, Component
+from after_sales.models import BusinessPartner, ServiceTicket
 from simple_history.models import HistoricalRecords
 from core.managers import BaseCompanyManager
 

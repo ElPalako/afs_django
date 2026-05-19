@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import ServiceTicket, Stock
+from .models import ServiceTicket
+from inventory.models import Stock
 from users.models import UserProfile
 from .forms import ServiceTicketForm
 from django.db.models import Q

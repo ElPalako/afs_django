@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'simple_history',
     'import_export',
     'debug_toolbar',
+    "inventory",
 ]
 
 MIDDLEWARE = [
