@@ -41,6 +41,7 @@ class Orders(models.Model):
         on_delete=models.RESTRICT,
         null=True,
         blank=True,
+        related_name='trackings',
     )
     comment = models.TextField(null=True, blank=True)
     comment_for_tpm = models.TextField(null=True, blank=True)
@@ -87,4 +88,5 @@ class OrdersSerialNumber(models.Model):
     order = models.ForeignKey(
         Orders,
         on_delete=models.RESTRICT,
+        related_name="serial_numbers",
     )
