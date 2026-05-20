@@ -3,34 +3,6 @@ from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
 from core.managers import BaseCompanyManager
 
-#Tabela trackingów - komponenty
-class OrdersTracking(models.Model):
-    class ParcelType(models.TextChoices):
-        PACKAGE = 'PACKAGE', 'Paczka'
-        PALLET = 'PALLET', 'Paleta'
-    class ParcelStatus(models.TextChoices):
-        NEW = 'NEW', 'Nowa'
-        ORDERED = 'ORDERED', 'Zlecona'
-        DELVIERED = 'DELIVERED', 'Dostarczona'
-    tracking = models.CharField(max_length=100, null=True, blank=True)
-    carrier = models.CharField(max_length=50, null=True, blank=True)
-    shipment_date = models.DateField(null=True, blank=True)
-    delivery_date = models.DateField(null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
-    status = models.CharField(choices=ParcelStatus, default='NEW')
-    parcel_type = models.CharField(choices=ParcelType, null=True, blank=True)
-    size = models.CharField(null=True, blank=True)
-    dimensions = models.CharField(null=True, blank=True)
-    weight = models.CharField(null=True, blank=True)
-    carrier_documents = models.CharField(null=True, blank=True)
-    customs_documents = models.CharField(null=True, blank=True)
-    packing_list = models.CharField(null=True, blank=True)
-    fv_proforma = models.CharField(null=True, blank=True)
-    recipient_id = models.ForeignKey(
-        'after_sales.BusinessPartner',
-        on_delete = models.RESTRICT,
-    )
-
 #Tabela zamówień na części
 class Orders(models.Model):
     class OrderStatus(models.TextChoices):
@@ -65,7 +37,7 @@ class Orders(models.Model):
     material_prepared = models.CharField(max_length=50, null=True, blank=True)
     qty_prepared = models.PositiveIntegerField(default=0)
     tracking = models.ForeignKey(
-        OrdersTracking,
+        'logistic.Shipment',
         on_delete=models.RESTRICT,
         null=True,
         blank=True,

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 from import_export.admin import ImportExportMixin
-from .models import Orders, OrdersTracking, OrdersSerialNumber
+from .models import Orders, OrdersSerialNumber
 
 # Rejestrujemy wszystkie nasze modele, żeby były widoczne w panelu admina
 # przykład: admin.site.register(OrdersSerialNumber)
@@ -15,12 +15,6 @@ class OrdersAdmin(ImportExportMixin, SimpleHistoryAdmin): # Kolejność ma znacz
     list_filter = ('order_number', 'material', 'status', 'business_partner', 'purpose', 'ticket', 'material', 'description', 'internal_order_number')
     # Pasek wyszukiwania!
     search_fields = ('order_number', 'material', 'status', 'business_partner__name', 'ticket__ticket_number', 'material', 'description', 'internal_order_number')
-
-@admin.register(OrdersTracking)
-class OrdersTrackingAdmin(ImportExportMixin, SimpleHistoryAdmin):
-    list_display = ('id', 'tracking', 'carrier', 'status', 'recipient_id__name')
-    list_filter = ('tracking', 'carrier', 'status', 'recipient_id__name')
-    search_fields = ('tracking', 'carrier', 'status', 'recipient_id__name')
     
 @admin.register(OrdersSerialNumber)
 class OrdersSerialNumberAdmin(ImportExportMixin, SimpleHistoryAdmin):
