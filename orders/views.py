@@ -5,6 +5,7 @@ from users.models import UserProfile
 from .forms import NewOrderForm
 from django.db.models import Q
 from .permissions import can_create_update_order
+from django.contrib import messages
 
 @login_required(login_url='login')
 @user_passes_test(can_create_update_order, login_url='/')
@@ -13,18 +14,21 @@ def create_order_view(request):
     if request.method == 'POST':
         form = NewOrderForm(request.POST)
         if form.is_valid(): # Django sam sprawdza, czy wpisano maile, daty itp.
+        # Zmiana u bramkarza: sprawdzamy profil i oddział
+            if not hasattr(request.user, 'profile') or not request.user.profile.branch:
+                messages.error(request, "Twój profil nie ma przypisanego oddziału firmy!")
+                return render(request, 'orders/create_order.html', {'form': form})
+
+            new_order = form.save(commit=False)
             
-            # 1. PAUZA: Tworzymy obiekt zgłoszenia z formularza, ale NIE zapisujemy go jeszcze w bazie
-            order = form.save(commit=False)
-            # 2. Przypisujemy Twórcę (zalogowany user)
-            order.created_by = request.user
-            # 3. Przypisujemy firmę (z modelu UserProfile, pole 'company')
-            # (Używamy hasattr jako tarczy - w razie gdyby np. superuser nie miał profilu)
-            if hasattr(request.user, 'profile'):
-                order.business_partner = request.user.profile.company
-                
-            # 3. ZAPIS: Teraz kompletne zgłoszenie z przypisaną firmą leci na serwer!
-            order.save()
+            # 1. Przypisujemy konkretny oddział, w którym pracuje użytkownik
+            new_order.branch = request.user.profile.branch
+            
+            # 2. Automatycznie wyciągamy firmę-matkę tego oddziału i też ją zapisujemy w zamówieniu!
+            new_order.business_partner = request.user.profile.branch.business_partner
+            
+            new_order.created_by = request.user
+            new_order.save()
             # MAGIA HTMX: Sprawdzamy, czy to zapytanie wysłane w tle
             if request.headers.get('HX-Request'):
                 # Zwracamy czysty HTML z informacją o sukcesie. 

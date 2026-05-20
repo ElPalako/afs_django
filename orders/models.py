@@ -54,16 +54,9 @@ class Orders(models.Model):
     purpose = models.CharField(choices=Purpose, default='IN_WARRANTY')
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.RESTRICT, null=True, blank=True)
-    ticket = models.ForeignKey(
-        'after_sales.ServiceTicket',
-        on_delete=models.RESTRICT,
-        null=True,
-        blank=True
-    )
-    business_partner = models.ForeignKey(
-        'after_sales.BusinessPartner',
-        on_delete=models.RESTRICT,       
-    )
+    ticket = models.ForeignKey('after_sales.ServiceTicket', on_delete=models.RESTRICT, null=True, blank=True    )
+    business_partner = models.ForeignKey('after_sales.BusinessPartner', on_delete=models.RESTRICT)
+    business_partner_branch = models.ForeignKey('after_sales.BusinessPartnerBranch', on_delete=models.RESTRICT, null=True)
     material = models.CharField(max_length=50, null=True, blank=True)
     qty = models.PositiveIntegerField()
     description = models.CharField(max_length=255, null=True, blank=True)
