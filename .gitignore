@@ -1,5 +1,21 @@
+# Python
 .venv/
 __pycache__/
-db.sqlite3
 *.pyc
+
+# Baza danych
+db.sqlite3
+
+# Środowisko
 .env
+
+# IDE / Edytory
+.vscode/
+.idea/
+
+# Systemowe
+.DS_Store
+Thumbs.db
+
+# Media (na przyszłość)
+media/
