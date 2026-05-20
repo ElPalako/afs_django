@@ -71,7 +71,7 @@
 
 						<th
 							class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors select-none"
-							hx-get="{% url 'ticket-list' %}?sort={% if current_sort == '-created_at' %}created_at{% else %}-created_at{% endif %}"
+							hx-get="{% url 'ticket_list' %}?sort={% if current_sort == '-created_at' %}created_at{% else %}-created_at{% endif %}"
 							hx-target="#ticket-table-container"
 							hx-select="#ticket-table-container"
 							hx-include="[name='q']"
