@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'import_export',
     'debug_toolbar',
     "inventory",
-    "finance"
+    "finance",
+    "logistic"
 ]
 
 MIDDLEWARE = [

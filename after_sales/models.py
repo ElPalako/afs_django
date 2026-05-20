@@ -20,6 +20,7 @@ class BusinessPartner(models.Model):
         DISTRIBUTOR = 'DISTRIBUTOR', 'Dystrybutor'
         SERVICE_CENTER = 'SERVICE_CENTER', 'Serwis Zewnętrzny'
         B2B_CLIENT = 'B2B_CLIENT', 'Klient Firmowy'
+        CARRIER = 'CARRIER', 'Przewoźnik'
 
     created_by = models.ForeignKey(User, on_delete=models.RESTRICT ,null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
